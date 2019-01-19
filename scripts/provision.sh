@@ -17,3 +17,6 @@ cd $APP_DIR
 cp .env.dist .env
 composer install
 
+mkdir -p /dev/shm/symfony/cache/
+chmod 777 /dev/shm/symfony/cache/
+
