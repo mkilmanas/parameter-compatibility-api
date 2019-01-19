@@ -12,6 +12,8 @@ apt-get install -y \
     php7.2-iconv \
     php7.2-json \
     php7.2-mbstring \
+    php7.2-mysql \
+    php7.2-gmp \
     php7.2-xml
 
 cd $APP_DIR
@@ -21,3 +23,5 @@ composer install
 mkdir -p /dev/shm/symfony/cache/
 chmod 777 /dev/shm/symfony/cache/
 
+bin/console doctrine:database:create -n
+bin/console doctrine:schema:update --force -n
