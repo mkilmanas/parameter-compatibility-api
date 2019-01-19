@@ -11,6 +11,7 @@ apt-get install -y \
     php7.2-ctype \
     php7.2-iconv \
     php7.2-json \
+    php7.2-mbstring \
     php7.2-xml
 
 cd $APP_DIR
