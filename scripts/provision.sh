@@ -18,6 +18,8 @@ apt-get install -y \
 
 cd $APP_DIR
 cp .env.dist .env
+cp phpspec.yml.dist phpspec.yml
+cp behat.yml.dist behat.yml
 composer install
 
 mkdir -p /dev/shm/symfony/cache/

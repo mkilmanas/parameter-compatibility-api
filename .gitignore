@@ -50,3 +50,7 @@
 ###< symfony/web-server-bundle ###
 
 /.vagrant/
+###> behat/symfony2-extension ###
+behat.yml
+###< behat/symfony2-extension ###
+phpspec.yml

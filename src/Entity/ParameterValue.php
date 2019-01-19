@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="parameter_values")
+ * @ORM\Table(name="parameter_values", uniqueConstraints={@ORM\UniqueConstraint(name="unique_parameter_value",columns={"parameter_id","value"})})
  */
 class ParameterValue
 {
@@ -33,7 +33,7 @@ class ParameterValue
     /**
      * @var ?string
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=255)
      */
     private $value;
 
