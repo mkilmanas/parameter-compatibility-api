@@ -68,16 +68,4 @@ class ParameterSpec extends ObjectBehavior
         $this->addValue($value);
         $this->getValues()->shouldHaveCount(1);
     }
-
-    function its_values_can_be_removed(ParameterValue $value)
-    {
-        $this->addValue($value);
-        $this->removeValue($value);
-        $this->getValues()->shouldNotContain($value);
-    }
-
-    function it_silently_skips_removal_of_value_that_was_not_added(ParameterValue $value)
-    {
-        $this->shouldNotThrow()->during('removeValue', [$value]);
-    }
 }

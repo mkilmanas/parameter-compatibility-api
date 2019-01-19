@@ -84,12 +84,4 @@ class Parameter
         }
         return $this;
     }
-
-    public function removeValue(ParameterValue $value) : Parameter
-    {
-        if ($this->values->contains($value)) {
-            $this->values->removeElement($value);
-        }
-        return $this;
-    }
 }

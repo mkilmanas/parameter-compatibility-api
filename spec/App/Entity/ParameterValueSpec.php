@@ -9,6 +9,11 @@ use Prophecy\Argument;
 
 class ParameterValueSpec extends ObjectBehavior
 {
+    function let(Parameter $parameter)
+    {
+        $this->beConstructedWith($parameter);
+    }
+
     function it_is_initializable_with_at_least_one_parameter(Parameter $parameter)
     {
         $this->beConstructedWith($parameter);
@@ -55,5 +60,30 @@ class ParameterValueSpec extends ObjectBehavior
     {
         $this->beConstructedWith($parameter, null, "some value");
         $this->getValue()->shouldReturn("some value");
+    }
+
+    function its_prohibited_values_is_empty_by_default()
+    {
+        $this->getProhibitedValues()->shouldBeEmpty();
+    }
+
+    function it_adds_new_value_to_prohibit(ParameterValue $value)
+    {
+        $this->addProhibitedValue($value);
+        $this->getProhibitedValues()->shouldContain($value);
+    }
+
+    function it_adds_prohibited_value_only_once(ParameterValue $value)
+    {
+        $this->addProhibitedValue($value);
+        $this->addProhibitedValue($value);
+        $this->getProhibitedValues()->shouldHaveCount(1);
+    }
+
+    function it_makes_the_inverse_prohibition_automatically(ParameterValue $value)
+    {
+        $this->addProhibitedValue($value);
+
+        $value->addProhibitedValue($this)->shouldHaveBeenCalled();
     }
 }

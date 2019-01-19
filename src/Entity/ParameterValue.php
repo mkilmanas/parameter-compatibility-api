@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
@@ -36,6 +38,21 @@ class ParameterValue
     private $value;
 
     /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="ParameterValue", inversedBy="isProhibitedBy")
+     * @ORM\JoinTable(name="prohibited_value_pairs")
+     */
+    private $prohibits;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="ParameterValue", mappedBy="prohibits")
+     */
+    private $isProhibitedBy;
+
+    /**
      * ParameterValue constructor.
      * @param string|null $id
      * @param Parameter|null $parameter
@@ -47,6 +64,8 @@ class ParameterValue
         $this->parameter = $parameter;
         $this->id = $id ?? Uuid::uuid4()->toString();
         $this->value = $value;
+        $this->prohibits = new ArrayCollection();
+        $this->isProhibitedBy = new ArrayCollection();
     }
 
     /**
@@ -71,6 +90,19 @@ class ParameterValue
     public function getValue(): ?string
     {
         return $this->value;
+    }
+
+    public function getProhibitedValues() : Collection
+    {
+        return $this->prohibits;
+    }
+
+    public function addProhibitedValue(ParameterValue $value)
+    {
+        if (!$this->prohibits->contains($value))     {
+            $this->prohibits->add($value);
+            $value->addProhibitedValue($this);
+        }
     }
 
 }
