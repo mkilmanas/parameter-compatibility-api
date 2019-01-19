@@ -73,6 +73,7 @@ class FeatureContext implements Context
             $parameterValue = $this->entityManager->getRepository(ParameterValue::class)->findOneBy(['parameter' => $parameter, 'value' => $value]);
             if (!$parameterValue) {
                 $parameterValue = new ParameterValue($parameter, null, $value);
+                $parameter->addValue($parameterValue);
                 $this->entityManager->persist($parameterValue);
             }
         }
