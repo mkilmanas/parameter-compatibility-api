@@ -26,3 +26,24 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Repository\ParameterRepository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments:
+            - 'App\Entity\Parameter'
+
+    App\Repository\ParameterValueRepository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments:
+            - 'App\Entity\ParameterValue'
+
+    App\Service\SelectionParser:
+        arguments:
+            $parameterRepository: '@App\Repository\ParameterRepository'
+            $valueRepository: '@App\Repository\ParameterValueRepository'
+
+    App\Service\OptionProvider:
+        arguments:
+            $parameterRepository: '@App\Repository\ParameterRepository'
