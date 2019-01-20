@@ -7,6 +7,7 @@ namespace App\Service;
 
 use App\Entity\Parameter;
 use App\Entity\ParameterValue;
+use App\ValueObject\FilteredOptionCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;
 
@@ -29,15 +30,12 @@ class OptionProvider
     public function provideForSelection(Collection $selection)
     {
         /** @var ParameterValue[] $selection */
-        /** @var Parameter[] $params */
-        $params = $this->parameterRepository->findAll();
 
-        $result = [];
-
-        foreach ($params as $param) {
-            $result[$param->getName()] = array_values(
-                $param->getValues()
-                    ->filter(
+        return array_map(
+            function (Parameter $param) use ($selection) {
+                return new FilteredOptionCollection(
+                    $param,
+                    $param->getValues()->filter(
                         function (ParameterValue $v) use ($selection)
                         {
                             foreach ($selection as $selectedValue) {
@@ -48,11 +46,9 @@ class OptionProvider
                             return true;
                         }
                     )
-                    ->map(function (ParameterValue $v) { return $v->getValue(); })
-                    ->toArray()
-            );
-        }
-
-        return $result;
+                );
+            },
+            $this->parameterRepository->findAll()
+        );
     }
 }

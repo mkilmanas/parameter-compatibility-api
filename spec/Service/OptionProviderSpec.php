@@ -5,6 +5,7 @@ namespace spec\App\Service;
 use App\Entity\Parameter;
 use App\Entity\ParameterValue;
 use App\Service\OptionProvider;
+use App\ValueObject\FilteredOptionCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -35,7 +36,13 @@ class OptionProviderSpec extends ObjectBehavior
 
         $parameterRepository->findAll()->willReturn([$parameterA, $parameterB]);
 
-        $this->provideForSelection(new ArrayCollection())->shouldReturn(['A' => ['X'], 'B' => ['Y','Z']]);
+        $filteredOptionsA = new FilteredOptionCollection($parameterA, $parameterA->getValues());
+        $filteredOptionsB = new FilteredOptionCollection($parameterB, $parameterB->getValues());
+
+        $selection = $this->provideForSelection(new ArrayCollection());
+        $selection->shouldHaveCount(2);
+        $selection[0]->shouldBeLike($filteredOptionsA);
+        $selection[1]->shouldBeLike($filteredOptionsB);
     }
 
     function it_removes_values_prohibited_by_selection(
@@ -54,6 +61,13 @@ class OptionProviderSpec extends ObjectBehavior
 
         $selection = new ArrayCollection([$valueX]);
 
-        $this->provideForSelection($selection)->shouldReturn(['A' => ['X'], 'B' => ['Z']]);
+        $filteredOptionsA = new FilteredOptionCollection($parameterA, $parameterA->getValues());
+
+        $selection = $this->provideForSelection($selection);
+        $selection->shouldHaveCount(2);
+        $selection[0]->shouldBeLike($filteredOptionsA);
+        $selection[1]->getParameter()->shouldBe($parameterB);
+        $selection[1]->getOptions()->shouldHaveCount(1);
+        $selection[1]->getOptions()->shouldContain($valueZ);
     }
 }
