@@ -27,3 +27,4 @@ chmod 777 /dev/shm/symfony/cache/
 
 bin/console doctrine:database:create -n
 bin/console doctrine:schema:update --force -n
+bin/console doctrine:fixtures:load --group=example -n

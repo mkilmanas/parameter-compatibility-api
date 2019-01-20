@@ -1,22 +1,80 @@
 # parameter-compatibility-api
 
-### Solution proposal #1
+For task description see [TASK.md](./TASK.md)
 
-If possible, I would enquire more to try and understand the business logic driving this limitations. This way the logic could be written as logical rules in the code and executed on demand, possibly caching the results as they should not change as long as the rules do not change.
+For proposed and chosen solution see [SOLUTIONS.md](./SOLUTIONS.md)
 
-As there is likely more than one such rule restricting the selection Chain-of-Responsibility (or Strategy depending on how the restrictions are combined together) pattern could be used to process the set of available options in order to fullfil all the restriction requirements.
+### Running this API from a virtual machine
 
-This would allow to have code resemble business logic closely, thus enabling easier understanding and maintainability of the code over time.
+If you have VirtualBox, vagrant and OS supporting NFS, you can run the Vagrant VM which will setup all the dependencies for you. Just clone this repo and in the root dir of the repository run
 
-### Solution proposal #2
+```$bash
+vagrant up
+```
 
-As the business rules are not always available to clearly express why and when parameter combinations are unavailable, or there may be a need to have possibility to modify the combinations by an administrator, a blanket solution would be to maintain a list of all a) available or b) disallowed combinantions (basically whitelist or blacklist strategry, depending on whethere there a more allowed or more prohibited combinations).
+Sit back and allow some time for the VM setup to run.
 
-This solution is applicable in more situations (it can always replace the solution #1 whereas the inverse is not always true) at the cost of having to maintain the list of restricted combinations at the lower level of abstraction.
+After the process completes, you should be able to see the API working at [http://localhost:8080/](http://localhost:8080/)
 
-### Choice
+Any subsequenty mentioned commands should be run from the VMs project directory. To get there run
 
-Whilst solution #1 would be preferred whenever possible, in this case solution #2 was chosen because:
+```bash
+vagrant ssh
+### It ssh connects to VM. Next commands are run in the VM shell
+cd /var/www
+```
 
-- There is no mention of a business domain in which this will be used, so it does not seem like there is a domain expert to talk to;
-- Examples follow this logic of explicitly listing prohibited combinations;
+### Running this API from your machine
+
+You will have to take care of the dependencies yourself. This is what has to be available:
+
+- PHP 7.2 with these extensions:
+    - xml
+    - json
+    - PDO / PDO-mysql
+    - ctype
+    - iconv
+    - gmp
+    - mbstring
+- MySQL / Maria DB server
+
+Then follow these steps:
+
+1. Clone this repository
+2. Copy `.env.dist` file to `.env` and modify the database credentials to match your environment
+3. Copy `phpspec.yml.dist` to `phpspec.yml` (modify it if you want/need to - defaults should work)
+4. Copy `behat.yml.dist` to `behat.yml` (modify it if you want/need to - defaults should work)
+5. Run `composer install` to setup the dependencies
+6. Start the webserver: `php bin/console server:start 127.0.0.1:8080`
+
+You should see the working API at [http://localhost:8080/](http://localhost:8080/)
+
+
+### Data Fixtures
+
+Initially the database is loaded with the minimal data set that was given in the example. 
+
+However, there are a few more data fixtures available for basic testing. You can import them by running
+
+```bash
+php bin/console doctrine:fixtures:load -n --group=<group>
+```  
+
+Where `<group>` is one of:
+- `example` - the one originally loaded
+- `none` - not a real fixture - just a way to clear the DB empty
+- `clothing` - a larger set of data with some arbitrary restrictions
+- `roulette` - restrictions that would apply for choosing a square on the roulette table 
+
+### Running the tests
+
+The specs (a.k.e. unit tests) are written with PhpSpec and can be run with:
+
+```bash
+vendor/bin/phpspec run
+```
+
+The behavioural tests (end-to-end in this case) are done with Behat. Make sure the DB is clean before running them (use `none` data fixture). Run with:
+```bash
+vendor/bin/behat
+```

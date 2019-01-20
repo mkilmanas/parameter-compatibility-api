@@ -6,8 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "ext-pdo-mysql": "*",
-        "behat/behat": "^3.5",
+        "ext-pdo_mysql": "*",
         "doctrine/doctrine-bundle": "^1.10",
         "doctrine/orm": "^2.6",
         "friendsofsymfony/rest-bundle": "^2.5",
@@ -67,7 +66,9 @@
     "require-dev": {
         "ext-xml": "*",
         "behat/symfony2-extension": "^2.1",
+        "doctrine/doctrine-fixtures-bundle": "^3.1",
         "phpspec/phpspec": "^5.1",
+        "behat/behat": "^3.5",
         "symfony/web-server-bundle": "4.2.*"
     }
 }

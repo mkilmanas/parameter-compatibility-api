@@ -23,7 +23,7 @@ class FilteredOptionSerializer
             array_map(
                 function (FilteredOptionCollection $foc)
                 {
-                    return $foc->getOptions()->map(function (ParameterValue $pv) { return $pv->getValue(); })->toArray();
+                    return array_values($foc->getOptions()->map(function (ParameterValue $pv) { return $pv->getValue(); })->toArray());
                 },
                 $options
             )
