@@ -49,6 +49,11 @@ Then follow these steps:
 
 You should see the working API at [http://localhost:8080/](http://localhost:8080/)
 
+### Querying the API
+
+In order to indicate the current selection, provide it in the URL (query string) as `<parameter-name>=<value>` pairs. 
+
+E.g. http://localhost:8080/?Parameter1=A&Parameter2=X
 
 ### Data Fixtures
 
@@ -68,13 +73,13 @@ Where `<group>` is one of:
 
 ### Running the tests
 
-The specs (a.k.e. unit tests) are written with PhpSpec and can be run with:
+The specs (a.k.a. unit tests) are written with [PhpSpec](https://phpspec.net) and can be run with:
 
 ```bash
 vendor/bin/phpspec run
 ```
 
-The behavioural tests (end-to-end in this case) are done with Behat. Make sure the DB is clean before running them (use `none` data fixture). Run with:
+The behavioural tests (end-to-end in this case) are done with [Behat](http://behat.org). Make sure the DB is clean before running them (use `none` data fixture). Run with:
 ```bash
 vendor/bin/behat
 ```
